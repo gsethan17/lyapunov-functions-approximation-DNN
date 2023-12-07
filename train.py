@@ -1,5 +1,5 @@
 import tensorflow as tf
-epsilon = 1e-4
+epsilon = 1e-5
 
 @tf.function
 def feed_forward(x, model):

@@ -37,7 +37,7 @@ def main(hyperP):
     loss_f = ReLoBRaLoRollLoss(num_terms=4)
     
     # Set up optimizer
-    optimizer = Adam(learning_rate=1e-3)
+    optimizer = Adam(learning_rate=1e-5)
     
     V.compile(loss=loss_f,
                 optimizer=optimizer)
@@ -182,7 +182,7 @@ def draw(model, system, save_path=False):
     
 if __name__ == "__main__":
     hyperP = {
-        'num_layers':4,
+        'num_layers':6,
         'num_nodes':64,
         'batch_size':512,
         'batch_size_zero':64,
