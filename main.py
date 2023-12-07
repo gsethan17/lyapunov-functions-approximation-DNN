@@ -142,7 +142,7 @@ def main(hyperP):
         print(losses)
             
     draw(V, pendulum, save_path=os.path.join(log_path, 'img', f'{epoch}.png'))
-    V.save('model')
+    V.save(os.paht.join(log_paht, 'model'))
 
 import matplotlib.pyplot as plt
 def draw(model, system, save_path=False):
