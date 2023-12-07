@@ -16,10 +16,9 @@ def get_zero_residual(x, model, system):
     dx_dt = system.solve(x)
     v_hat_dt = tf.reduce_sum((v_hat_dx * dx_dt), axis=-1, keepdims=True)
     
-    loss_v_zero = tf.reduce_mean(tf.square(v_hat))
-    loss_v_dt_zero = tf.reduce_mean(tf.square(v_hat_dt))
-    # print(v_hat_dt)
-    # print(v_hat_dt, loss_v_dt_zero)
+    loss_v_zero = tf.clip_by_value(tf.reduce_mean(tf.square(v_hat)), clip_value_min=1e-5, clip_value_max=1e+5)
+    loss_v_dt_zero = tf.clip_by_value(tf.reduce_mean(tf.square(v_hat_dt)), clip_value_min=1e-5, clip_value_max=1e+5)
+    
     return [loss_v_zero, loss_v_dt_zero]
     
 @tf.function
@@ -34,8 +33,8 @@ def get_residual(x, model, system):
     v_hat_loss = tf.boolean_mask(tf.square(v_hat) + epsilon, v_mask)
     v_hat_dt_loss = tf.boolean_mask(tf.square(v_hat_dt) + epsilon, v_dt_mask)
     
-    loss_v = tf.reduce_mean(v_hat_loss)
-    loss_v_dt = tf.reduce_mean(v_hat_dt_loss)
+    loss_v = tf.clip_by_value(tf.reduce_mean(v_hat_loss), clip_value_min=1e-5, clip_value_max=1e+5)
+    loss_v_dt = tf.clip_by_value(tf.reduce_mean(v_hat_dt_loss), clip_value_min=1e-5, clip_value_max=1e+5)
     
     return [loss_v, loss_v_dt]
     
