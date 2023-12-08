@@ -11,6 +11,7 @@ def get_model(num_input, num_output, num_layers, num_nodes,
                         use_bias=use_bias,
                         activation='tanh'))
     model.add(Dense(num_output, use_bias=use_last_bias))
+    model.add(tf.keras.layers.Lambda(lambda x: x * [100]))
     
     return model
 
