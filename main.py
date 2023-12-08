@@ -40,7 +40,7 @@ def main(hyperP):
     loss_f = ReLoBRaLoRollLoss(num_terms=4)
     
     # Set up optimizer
-    optimizer = Adam(learning_rate=1e-5)
+    optimizer = Adam(learning_rate=1e-3)
     
     V.compile(loss=loss_f,
                 optimizer=optimizer)
@@ -131,10 +131,10 @@ def main(hyperP):
                             logs=logs,
                             )
         
-        flag1 = np.isclose(logs['val_V_zero'], 0.0, atol=1e-6)
-        flag2 = np.isclose(logs['val_V_dt_zero'], 0.0, atol=1e-6)
-        flag3 = np.isclose(logs['val_V'], 0.0, atol=1e-3)
-        flag4 = np.isclose(logs['val_V_dt'], 0.0, atol=1e-3)
+        flag1 = np.isclose(logs['val_V_zero'], 0.0, atol=1e-7)
+        flag2 = np.isclose(logs['val_V_dt_zero'], 0.0, atol=1e-7)
+        flag3 = np.isclose(logs['val_V'], 0.0, atol=1e-7)
+        flag4 = np.isclose(logs['val_V_dt'], 0.0, atol=1e-7)
         
         if flag1 and flag2 and flag3 and flag4:
             break
@@ -160,7 +160,7 @@ if __name__ == "__main__":
         'step_per_epoch':100,
         # 'step_per_epoch':0,
         'num_epoch':1000,
-        'use_bias':False,
+        'use_bias':True,
         'use_last_bias':False,
     }
     

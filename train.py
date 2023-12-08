@@ -24,7 +24,7 @@ def get_zero_residual(x, model, system):
     return [loss_v_zero, loss_v_dt_zero]
     
 @tf.function
-def get_residual(x, model, system):
+def get_residual(x, model, system, eval=False):
     v_hat, v_hat_dx = feed_forward(x, model)
     dx_dt = system.solve(x)
     v_hat_dt = tf.reduce_sum((v_hat_dx * dx_dt), axis=-1, keepdims=True)
@@ -32,13 +32,18 @@ def get_residual(x, model, system):
     v_mask = tf.less_equal(v_hat, tf.zeros_like(v_hat))
     v_dt_mask = tf.greater_equal(v_hat_dt, tf.zeros_like(v_hat_dt))
     
-    v_hat_loss = tf.boolean_mask(tf.square(v_hat) + epsilon, v_mask)
-    v_hat_dt_loss = tf.boolean_mask(tf.square(v_hat_dt) + epsilon, v_dt_mask)
-    
+    if eval:
+        v_hat_loss = tf.boolean_mask(tf.square(v_hat), v_mask)
+        v_hat_dt_loss = tf.boolean_mask(tf.square(v_hat_dt), v_dt_mask)
+    else:
+        v_hat_loss = tf.boolean_mask(tf.square(v_hat) + epsilon, v_mask)
+        v_hat_dt_loss = tf.boolean_mask(tf.square(v_hat_dt) + epsilon, v_dt_mask)
     loss_v = tf.reduce_mean(v_hat_loss)
-    loss_v = tf.clip_by_value(loss_v, clip_value_min=1e-5, clip_value_max=1e+5)
+    if not eval:
+        loss_v = tf.clip_by_value(loss_v, clip_value_min=1e-2, clip_value_max=1e+4)
     loss_v_dt = tf.reduce_mean(v_hat_dt_loss)
-    loss_v_dt = tf.clip_by_value(loss_v_dt, clip_value_min=1e-5, clip_value_max=1e+5)
+    if not eval:
+        loss_v_dt = tf.clip_by_value(loss_v_dt, clip_value_min=1e-2, clip_value_max=1e+4)
     
     return [loss_v, loss_v_dt]
     
@@ -63,7 +68,7 @@ def train_step(x, x_zero, model, system):
 @tf.function
 def val_step(x, x_zero, model, system):
     losses_zero = get_zero_residual(x_zero, model, system)
-    losses_nonZero = get_residual(x, model, system)
+    losses_nonZero = get_residual(x, model, system, eval=True)
     
     losses = losses_zero + losses_nonZero
     
