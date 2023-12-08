@@ -25,12 +25,17 @@ def draw_3d(model, system, save_path=False):
         v_hat[i] = output_.numpy()[:, 0]
         v_dt_hat[i] = v_hat_dt.numpy()[:, 0]
         
-    ax = plt.axes(projection='3d')
-    ax.plot_wireframe(X1, X2, v_hat, color='gray', alpha=0.4, label='V')
-    ax.plot_wireframe(X1, X2, v_dt_hat, color='purple', alpha=0.4, label='V_dot')
-    ax.set_xlabel('X1')
-    ax.set_ylabel('X2')
-    ax.set_zlabel('')
+    # ax = plt.axes(projection='3d')
+    fig, axs = plt.subplots(ncols=2, figsize=(18, 8), subplot_kw={"projection":"3d"})
+    axs[0].plot_wireframe(X1, X2, np.zeros_like(v_hat), color='gray', alpha=0.4)
+    axs[0].plot_wireframe(X1, X2, v_hat, color='purple', alpha=0.4, label='V')
+    axs[0].set_xlabel('X1')
+    axs[0].set_ylabel('X2')
+    
+    axs[1].plot_wireframe(X1, X2, np.zeros_like(v_hat), color='gray', alpha=0.4)
+    axs[1].plot_wireframe(X1, X2, v_dt_hat, color='purple', alpha=0.4, label='V_dot')
+    axs[1].set_xlabel('X1')
+    axs[1].set_ylabel('X2')
     
     if save_path:
         plt.savefig(save_path, bbox_inches="tight", dpi=400)
@@ -38,10 +43,29 @@ def draw_3d(model, system, save_path=False):
         plt.show()
 
 from system import Pendulum
+from model import get_model
 import os
+import yaml
+
 if __name__ == "__main__":
     pendulum = Pendulum()
-    load_model = tf.keras.models.load_model(os.path.join('train_5', 'model'))
-    load_model.summary()
     
-    # draw_3d(load_model, pendulum)
+    base_path = os.path.join('train_5')
+    config_path = os.path.join(base_path, 'config.yaml')
+    if not os.path.isfile(config_path):
+        raise FileExistsError(config_path)
+        
+    with open(config_path) as f:
+        hyperP = yaml.load(f, Loader=yaml.FullLoader)
+        
+    model = get_model(
+        num_input=pendulum.num_x,
+        num_output=1,
+        num_layers=hyperP['num_layers'],
+        num_nodes=hyperP['num_nodes'],
+    )
+    
+    weights_path = os.path.join(base_path, 'model', 'variables', 'variables')
+    model.load_weights(weights_path)
+    
+    draw_3d(model, pendulum)
