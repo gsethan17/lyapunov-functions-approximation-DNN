@@ -31,6 +31,8 @@ def main(hyperP):
         num_output=1,
         num_layers=hyperP['num_layers'],
         num_nodes=hyperP['num_nodes'],
+        use_bias=hyperP['use_bias'],
+        use_last_bias=hyperP['use_last_bias'],
     )
     
     V.summary()
@@ -129,8 +131,8 @@ def main(hyperP):
                             logs=logs,
                             )
         
-        flag1 = np.isclose(logs['val_V_zero'], 0.0, atol=1e-4)
-        flag2 = np.isclose(logs['val_V_dt_zero'], 0.0, atol=1e-4)
+        flag1 = np.isclose(logs['val_V_zero'], 0.0, atol=1e-7)
+        flag2 = np.isclose(logs['val_V_dt_zero'], 0.0, atol=1e-7)
         flag3 = np.isclose(logs['val_V'], 0.0, atol=1e-4)
         flag4 = np.isclose(logs['val_V_dt'], 0.0, atol=1e-4)
         
@@ -143,7 +145,7 @@ def main(hyperP):
         print(losses)
             
     draw_3d(V, pendulum, save_path=os.path.join(log_path, 'img', f'{epoch}.png'))
-    V.save(os.paht.join(log_path, 'model'))
+    V.save(os.path.join(log_path, 'model'))
 
 
     
@@ -156,6 +158,8 @@ if __name__ == "__main__":
         'step_per_epoch':100,
         # 'step_per_epoch':0,
         'num_epoch':1000,
+        'use_bias':True,
+        'use_last_bias':True,
     }
     
     main(hyperP)
