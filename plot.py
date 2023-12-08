@@ -36,3 +36,12 @@ def draw_3d(model, system, save_path=False):
         plt.savefig(save_path, bbox_inches="tight", dpi=400)
     else:
         plt.show()
+
+from system import Pendulum
+import os
+if __name__ == "__main__":
+    pendulum = Pendulum()
+    load_model = tf.keras.models.load_model(os.path.join('train_5', 'model'))
+    load_model.summary()
+    
+    # draw_3d(load_model, pendulum)

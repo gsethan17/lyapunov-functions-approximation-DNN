@@ -1,0 +1,6 @@
+batch_size: 512
+batch_size_zero: 64
+num_epoch: 1000
+num_layers: 6
+num_nodes: 64
+step_per_epoch: 100

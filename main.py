@@ -138,7 +138,7 @@ def main(hyperP):
             break
         
         if epoch % 10 == 0:
-            draw(V, pendulum, save_path=os.path.join(log_path, 'img', f'{epoch}.png'))
+            draw_3d(V, pendulum, save_path=os.path.join(log_path, 'img', f'{epoch}.png'))
         print(f'{epoch}: {flag1}, {flag2}, {flag3}, {flag4}')
         print(losses)
             
