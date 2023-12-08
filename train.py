@@ -1,5 +1,5 @@
 import tensorflow as tf
-epsilon = 1e-5
+epsilon = 1e-4
 
 @tf.function
 def feed_forward(x, model):
@@ -36,9 +36,9 @@ def get_residual(x, model, system):
     v_hat_dt_loss = tf.boolean_mask(tf.square(v_hat_dt) + epsilon, v_dt_mask)
     
     loss_v = tf.reduce_mean(v_hat_loss)
-    # loss_v = tf.clip_by_value(loss_v, clip_value_min=1e-5, clip_value_max=1e+5)
+    loss_v = tf.clip_by_value(loss_v, clip_value_min=1e-5, clip_value_max=1e+5)
     loss_v_dt = tf.reduce_mean(v_hat_dt_loss)
-    # loss_v_dt = tf.clip_by_value(loss_v_dt, clip_value_min=1e-5, clip_value_max=1e+5)
+    loss_v_dt = tf.clip_by_value(loss_v_dt, clip_value_min=1e-5, clip_value_max=1e+5)
     
     return [loss_v, loss_v_dt]
     

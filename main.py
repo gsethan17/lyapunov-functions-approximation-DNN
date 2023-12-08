@@ -131,10 +131,10 @@ def main(hyperP):
                             logs=logs,
                             )
         
-        flag1 = np.isclose(logs['val_V_zero'], 0.0, atol=1e-7)
-        flag2 = np.isclose(logs['val_V_dt_zero'], 0.0, atol=1e-7)
-        flag3 = np.isclose(logs['val_V'], 0.0, atol=1e-4)
-        flag4 = np.isclose(logs['val_V_dt'], 0.0, atol=1e-4)
+        flag1 = np.isclose(logs['val_V_zero'], 0.0, atol=1e-6)
+        flag2 = np.isclose(logs['val_V_dt_zero'], 0.0, atol=1e-6)
+        flag3 = np.isclose(logs['val_V'], 0.0, atol=1e-3)
+        flag4 = np.isclose(logs['val_V_dt'], 0.0, atol=1e-3)
         
         if flag1 and flag2 and flag3 and flag4:
             break
