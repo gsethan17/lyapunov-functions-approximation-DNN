@@ -148,8 +148,10 @@ def main(hyperP):
     V.save(os.path.join(log_path, 'model'))
 
 
-    
+from utils import gpu_limit
 if __name__ == "__main__":
+    gpu_limit(1)
+    
     hyperP = {
         'num_layers':6,
         'num_nodes':64,
@@ -158,8 +160,8 @@ if __name__ == "__main__":
         'step_per_epoch':100,
         # 'step_per_epoch':0,
         'num_epoch':1000,
-        'use_bias':True,
-        'use_last_bias':True,
+        'use_bias':False,
+        'use_last_bias':False,
     }
     
     main(hyperP)
