@@ -41,6 +41,8 @@ def draw_3d(model, system, save_path=False):
         plt.savefig(save_path, bbox_inches="tight", dpi=400)
     else:
         plt.show()
+        
+    plt.close()
 
 from system import Pendulum
 from model import get_model
